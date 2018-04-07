@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -18,15 +19,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.deepanshub.weddingplanner.R;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,6 +31,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -60,14 +69,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-        try {
-            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        }
+        //PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//        try {
+//            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+//        } catch (GooglePlayServicesNotAvailableException e) {
+//            e.printStackTrace();
+//        } catch (GooglePlayServicesRepairableException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
@@ -110,7 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationRequest.setInterval(1200000);
         locationRequest.setFastestInterval(1200000);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-
+        nearByPlacesJson("wedding hall", "hotel");
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
@@ -177,12 +186,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == PLACE_PICKER_REQUEST && requestCode == Activity.RESULT_OK) {
 
-            Place place = PlacePicker.getPlace(this, data);
-            String placename = String.format("Place=%s", place.getName());
-            String attributions = PlacePicker.getAttributions(data);
-            Log.e(TAG, "onActivityResult: " + placename + attributions);
-            double latitude = place.getLatLng().latitude;
-            double longitude = place.getLatLng().longitude;
+//            Place place = PlacePicker.getPlace(this, data);
+//            String placename = String.format("Place=%s", place.getName());
+//            String attributions = PlacePicker.getAttributions(data);
+//            Log.e(TAG, "onActivityResult: " + placename + attributions);
+//            double latitude = place.getLatLng().latitude;
+//            double longitude = place.getLatLng().longitude;
 
         }
     }
@@ -249,5 +258,60 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //
 //    }
 
+    @SuppressLint("StaticFieldLeak")
+    public void nearByPlacesJson(final String type, final String keyword) {
+        new AsyncTask<Void, Void, Void>() {
+            JSONObject jsonObject;
+            Reader reader;
+            HttpURLConnection connection;
 
+            @Override
+            protected Void doInBackground(Void... voids) {
+                try {
+                    URL url = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=30.7414,76.768&" +
+                            "radius=1000&type=" + type + "&keyword=" + keyword + "&key=AIzaSyCFIwqVdpJweiHU5ScsHrZSoocWBoqjFos");
+
+                    connection = (HttpURLConnection) url.openConnection();
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    reader = new InputStreamReader(connection.getInputStream());
+                    StringBuffer json = new StringBuffer(1024);
+                    String temp = "";
+                    while ((temp = bufferedReader.readLine()) != null) {
+                        json.append(temp + "\n");
+                    }
+                    jsonObject = new JSONObject(json.toString());
+                    JSONArray result = jsonObject.getJSONArray("results");
+                    for (int i = 0; i < (result.length() - 1); i++) {
+                        JSONObject result1 = result.getJSONObject(i);
+                        JSONObject geometry = result1.getJSONObject("geometry");
+                        JSONObject locatn = geometry.getJSONObject("location");
+                        Log.e("-----------", locatn.getDouble("lat") + "   sd  " + locatn.getDouble("lng"));
+
+                        final LatLng marker1 = new LatLng(locatn.getDouble("lat"), locatn.getDouble("lng"));
+                        MapsActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mMap.addMarker(new MarkerOptions().position(marker1));
+                            }
+                        });
+
+                    }
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+            }
+        }.execute();
+
+    }
 }
