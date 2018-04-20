@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -285,13 +286,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         JSONObject result1 = result.getJSONObject(i);
                         JSONObject geometry = result1.getJSONObject("geometry");
                         JSONObject locatn = geometry.getJSONObject("location");
+                        final JSONObject name = result.getJSONObject(i);
+                        final JSONObject rating = result.getJSONObject(i);
+                        final JSONObject vicinity = result.getJSONObject(i);
+
                         Log.e("-----------", locatn.getDouble("lat") + "   sd  " + locatn.getDouble("lng"));
 
                         final LatLng marker1 = new LatLng(locatn.getDouble("lat"), locatn.getDouble("lng"));
                         MapsActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mMap.addMarker(new MarkerOptions().position(marker1));
+                                try {
+                                    mMap.addMarker(new MarkerOptions().position(marker1).snippet(vicinity.getString("vicinity") + "\n" + rating.getInt("rating")).title(name.getString("name")).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         });
 
