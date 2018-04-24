@@ -1,82 +1,87 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/meFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#7b65ac"
-    tools:context="com.example.deepanshub.weddingplanner.me.BlankFragment">
-
-    <com.alexfu.countdownview.CountDownView
-        android:id="@+id/count_down"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        app:startDuration="600000" />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        >
-
-        <ImageView
-            android:layout_marginTop="20dp"
-            android:id="@+id/coupleImage"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:src="@drawable/couple_demo"
-            tools:ignore="MissingConstraints" />
-
-        <ImageView
-            android:id="@+id/selectimage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            app:srcCompat="@drawable/add_photo" />
-
-    </RelativeLayout>
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#7b65ac"
+        tools:context="com.example.deepanshub.weddingplanner.me.BlankFragment">
+
+        <com.alexfu.countdownview.CountDownView
+            android:id="@+id/count_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:startDuration="600000" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            >
+
+            <ImageView
+                android:layout_marginTop="20dp"
+                android:id="@+id/coupleImage"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:src="@drawable/couple_demo"
+                tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/selectimage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/add_photo" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/partner1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="His"
+                android:textSize="20sp"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="101dp"
+                tools:layout_editor_absoluteY="374dp" />
+
+            <EditText
+                android:id="@+id/partner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="partner"
+                android:textSize="20sp" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/partner1"
+            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="His"
-            android:textSize="20sp"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="101dp"
-            tools:layout_editor_absoluteY="374dp" />
+            android:text="Yours timeline"
+            android:layout_gravity="center" />
 
-        <EditText
-            android:id="@+id/partner2"
+        <com.baoyachi.stepview.HorizontalStepView
+            android:id="@+id/horizontalstepview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="partner"
-            android:textSize="20sp" />
+            android:layout_height="wrap_content">
+
+        </com.baoyachi.stepview.HorizontalStepView>
 
     </LinearLayout>
-
-    <TextView
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Yours timeline"
-        android:layout_gravity="center" />
-
-    <com.baoyachi.stepview.HorizontalStepView
-        android:id="@+id/horizontalstepview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-    </com.baoyachi.stepview.HorizontalStepView>
-
-</LinearLayout>
+</FrameLayout>

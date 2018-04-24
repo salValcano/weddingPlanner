@@ -94,7 +94,7 @@ public class Home extends AppCompatActivity {
             setNotificationbadge(navigation, value);
 
         } else {
-            setNotificationbadge(navigation, 3);
+            setNotificationbadge(navigation, 0);
         }
         switchToFragment();
 
@@ -106,7 +106,7 @@ public class Home extends AppCompatActivity {
     }
 
     public void setNotificationbadge(BottomNavigationView navigation, int datasetValue) {
-        
+
         navigation.setSelectedItemId(0);
         BottomNavigationMenuView bottomNavigationMenuView =
                 (BottomNavigationMenuView) navigation.getChildAt(0);

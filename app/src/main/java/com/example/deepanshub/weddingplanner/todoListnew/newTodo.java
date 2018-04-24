@@ -65,7 +65,7 @@ public class newTodo extends Fragment implements ItemClickListener {
         // Inflate the layout for this fragment
         preferences = getActivity().getSharedPreferences("Sharedpref", Context.MODE_PRIVATE);
 
-        View view = inflater.inflate(R.layout.fragment_new_todo, container, false);
+        final View view = inflater.inflate(R.layout.fragment_new_todo, container, false);
         db = FirebaseFirestore.getInstance();
         dialog = new SpotsDialog(getActivity());
         title = view.findViewById(R.id.newtitle);
@@ -74,16 +74,21 @@ public class newTodo extends Fragment implements ItemClickListener {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (title.getText().toString().equals("") && description.getText().toString().equals("")) {
 
-                if (title.getText().toString() == null && title.getText().toString() == "" &&
-                        description.getText().toString() == null && description.getText().toString() == "") {
-                    Snackbar snackbar = Snackbar.make(v, "You Have to Do Something", Snackbar.LENGTH_LONG);
+                    Snackbar snackbar = Snackbar.make(view.findViewById(R.id.coordinatorlayoutnewtodo), "You Have to Do Something", Snackbar.LENGTH_LONG);
                     snackbar.show();
-                } else if (!isUpdate) {
-                    setData(title.getText().toString(), description.getText().toString());
+                    Toast.makeText(getActivity(), "You Have to Do Something", Toast.LENGTH_LONG).show();
+
                 } else {
-                    updateData(title.getText().toString(), description.getText().toString());
-                    isUpdate = !isUpdate;
+                    if (!isUpdate) {
+
+
+                        setData(title.getText().toString(), description.getText().toString());
+                    } else {
+                        updateData(title.getText().toString(), description.getText().toString());
+                        isUpdate = !isUpdate;
+                    }
                 }
             }
         });

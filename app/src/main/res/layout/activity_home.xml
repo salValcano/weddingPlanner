@@ -10,11 +10,7 @@
     <FrameLayout
         android:id="@+id/replaceFramelayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="2dp"
-
-        tools:ignore="MissingConstraints">
+        android:layout_height="wrap_content">
 
     </FrameLayout>
 
